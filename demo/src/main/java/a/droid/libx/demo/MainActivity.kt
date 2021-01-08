@@ -1,6 +1,12 @@
 package a.droid.libx.demo
 
+import a.droid.libx.core.SharedPreferencesX
+import a.droid.libx.ktx.commit
+import a.droid.libx.ktx.get
+import a.droid.libx.ktx.shared
 import a.droid.libx.ktx.toast
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -18,8 +24,15 @@ class MainActivity : AppCompatActivity() {
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
-            toast("hello world")
+            12345.toast(this)
         }
+        //ktx
+        val spf = shared("xx")
+        spf.commit {
+            it.putString("xx", "hello world")
+        }
+
+        toast(spf.get<String>("xx"))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
