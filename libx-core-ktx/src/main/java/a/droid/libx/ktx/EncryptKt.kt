@@ -19,6 +19,54 @@ fun File.md5(): String {
     return EncryptX.md5().encode(this)
 }
 
+fun Number.sha(): String {
+    return EncryptX.sha().encode(this.toString())
+}
+
+fun String.sha(): String {
+    return EncryptX.sha().encode(this)
+}
+
+fun ByteArray.sha(): String {
+    return EncryptX.sha().encode(String(this))
+}
+
+fun File.sha(): String {
+    return EncryptX.sha().encode(this)
+}
+
+fun Number.sha256(): String {
+    return EncryptX.sha256().encode(this.toString())
+}
+
+fun String.sha256(): String {
+    return EncryptX.sha256().encode(this)
+}
+
+fun ByteArray.sha256(): String {
+    return EncryptX.sha256().encode(String(this))
+}
+
+fun File.sha256(): String {
+    return EncryptX.sha256().encode(this)
+}
+
+fun Number.sha512(): String {
+    return EncryptX.sha512().encode(this.toString())
+}
+
+fun String.sha512(): String {
+    return EncryptX.sha512().encode(this)
+}
+
+fun ByteArray.sha512(): String {
+    return EncryptX.sha512().encode(String(this))
+}
+
+fun File.sha512(): String {
+    return EncryptX.sha512().encode(this)
+}
+
 fun Number.base64(): ByteArray {
     return EncryptX.base64().encode(this.toString())
 }
