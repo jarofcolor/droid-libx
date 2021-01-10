@@ -3,6 +3,7 @@ package a.droid.libx.demo
 import a.droid.libx.core.BundleX
 import a.droid.libx.core.IntentX
 import a.droid.libx.core.SharedPreferencesX
+import a.droid.libx.core.encrypt.EncryptX
 import a.droid.libx.ktx.commit
 import a.droid.libx.ktx.get
 import a.droid.libx.ktx.shared
@@ -10,6 +11,7 @@ import a.droid.libx.ktx.toast
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,10 @@ import android.view.Menu
 import android.view.MenuItem
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        val TAG = "MainActivity";
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 //                .className(packageName, MainActivity::class.java)
 //                .extras(BundleX().putString("12", "34"))
 //                .startActivity()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
