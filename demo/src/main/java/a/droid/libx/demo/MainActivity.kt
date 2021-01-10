@@ -1,5 +1,7 @@
 package a.droid.libx.demo
 
+import a.droid.libx.core.BundleX
+import a.droid.libx.core.IntentX
 import a.droid.libx.core.SharedPreferencesX
 import a.droid.libx.ktx.commit
 import a.droid.libx.ktx.get
@@ -33,6 +35,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         toast(spf.get<String>("xx"))
+
+//        IntentX.on(this)
+//                .className(packageName, MainActivity::class.java)
+//                .extras(BundleX().putString("12", "34"))
+//                .startActivity()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
