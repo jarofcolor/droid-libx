@@ -30,3 +30,17 @@ fun String.base64(): ByteArray {
 fun ByteArray.base64(): ByteArray {
     return EncryptX.base64().encode(this)
 }
+
+fun File.base64(dst: File, isDecoded: Boolean = false, isNewline: Boolean = false): Boolean {
+    return if (!isDecoded)
+        EncryptX.base64().encode(this, dst, isNewline)
+    else
+        EncryptX.base64().decode(this, dst, isNewline)
+}
+
+fun File.base64(dst: File, isDecoded: Boolean = false, lineLength: Int = 76, lineSeparator: String = ""): Boolean {
+    return if (!isDecoded)
+        EncryptX.base64().encode(this, dst, lineLength, lineSeparator)
+    else
+        EncryptX.base64().decode(this, dst, lineSeparator.isNotEmpty())
+}
