@@ -17,6 +17,10 @@ public class EncryptX {
         return new HashLib("SHA-512");
     }
 
+    public static HashLib hashLib(String algorithm) {
+        return new HashLib(algorithm);
+    }
+
     public static Base64 base64() {
         return new Base64();
     }
