@@ -5,14 +5,19 @@ import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Md5 {
-    private static final char hexDigits[] = { // 用来将字节转换成 16 进制表示的字符
+public class HashLib {
+    private String algorithm;
+    private static final char[] hexDigits = { // 用来将字节转换成 16 进制表示的字符
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
             'e', 'f'};
 
+    public HashLib(String algorithm) {
+        this.algorithm = algorithm;
+    }
+
     public String encode(File file) {
         try {
-            MessageDigest MD5 = MessageDigest.getInstance("MD5");
+            MessageDigest MD5 = MessageDigest.getInstance(algorithm);
             FileInputStream fileInputStream = new FileInputStream(file);
             byte[] buffer = new byte[8192];
             int length;
@@ -29,8 +34,19 @@ public class Md5 {
 
     public String encode(String str) {
         try {
-            MessageDigest MD5 = MessageDigest.getInstance("MD5");
+            MessageDigest MD5 = MessageDigest.getInstance(algorithm);
             MD5.update(str.getBytes());
+            return new String(covert(MD5.digest()));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String encode(byte[] data) {
+        try {
+            MessageDigest MD5 = MessageDigest.getInstance(algorithm);
+            MD5.update(data);
             return new String(covert(MD5.digest()));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

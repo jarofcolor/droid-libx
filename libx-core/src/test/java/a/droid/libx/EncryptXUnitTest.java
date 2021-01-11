@@ -54,4 +54,14 @@ public class EncryptXUnitTest {
         System.out.println(encodedStr);
         assertEquals(encodedStr, "b1aa16eb6e68fc3319c697ba3e7f66c2");
     }
+
+    @Test
+    public void sha() {
+        String str = "Ahjdfhuddjkcdufguefhevedfvgerufeocfndkvurfgurevbrf=X";
+        String encodedStr = EncryptX.sha().encode(str);
+        System.out.println(encodedStr);
+        assertEquals(encodedStr, "0c37c6a6ead1264c42d8a3800304ca7c8565c337");
+    }
+
+
 }
