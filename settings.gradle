@@ -1,4 +1,3 @@
-include ':demo'
 include ':libx-core-ktx'
 include ':libx-core'
 rootProject.name = "droid-libx"
