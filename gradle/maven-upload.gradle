@@ -41,7 +41,6 @@ install {
 
                 if (project.hasProperty("mavenDependencies")) {
                     def mavenDependencies = project.mavenDependencies
-                    println("huangli--"+mavenDependencies)
                     dependencies {
                         mavenDependencies.forEach { md ->
                             dependency {
