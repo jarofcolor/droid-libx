@@ -41,6 +41,6 @@ dependencies {
 }
 
 ext.mavenDependencies = [
-        [groupId: "a.droid.libx", artifactId: "core", version: "0.0.1", scope: "compile", type: "aar"]
+        [groupId: "a.droid.libx", artifactId: "core", version: "0.0.2", scope: "compile", type: "aar"]
 ]
 apply from: '../gradle/maven-upload.gradle'

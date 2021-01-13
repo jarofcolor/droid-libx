@@ -7,7 +7,7 @@ import a.droid.libx.core.http.HttpX;
 public class HttpXTest {
     @Test
     public void testGet() {
-        HttpX.get("https://www.baidu.com/").param("tn","simple").requestSync(new HttpX.IPlainTextResult() {
+        HttpX.get("https://www.baidu.com/").param("tn","simple").request(new HttpX.IPlainTextResult() {
             @Override
             public void onResult(String data) {
                 System.out.println("success:" + data);
@@ -22,7 +22,7 @@ public class HttpXTest {
 
     @Test
     public void testPost(){
-        HttpX.post("https://www.baidu.com/").param("tn","simple").requestSync(new HttpX.IPlainTextResult() {
+        HttpX.post("https://www.baidu.com/").param("tn","simple").requestAsync(new HttpX.IPlainTextResult() {
             @Override
             public void onResult(String data) {
                 System.out.println("success:" + data);

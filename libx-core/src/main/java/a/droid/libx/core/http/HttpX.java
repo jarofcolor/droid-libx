@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -24,6 +23,47 @@ public class HttpX {
         void onResult(byte[] data, int offset, int len);
     }
 
+    public static class Cancelable {
+        private volatile boolean isCancel = false;
+        private final Runnable task;
+        private Runnable cancelTask;
+
+        private Cancelable(HttpX httpX, IResult result) {
+            this.task = () -> {
+                httpX.exec(result, this);
+            };
+        }
+
+        public void cancel() {
+            isCancel = true;
+            if (cancelTask != null) {
+                try {
+                    cancelTask.run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public boolean isCancel() {
+            return isCancel;
+        }
+
+        void run() {
+            if (!isCancel)
+                task.run();
+        }
+
+        void runAsync() {
+            if (!isCancel)
+                executor.execute(() -> {
+                    if (!isCancel) {
+                        task.run();
+                    }
+                });
+        }
+    }
+
     enum Method {
         GET("GET"), POST("POST");
         private final String name;
@@ -40,10 +80,10 @@ public class HttpX {
     public static final Charset UTF_8 = Charset.forName("UTF-8");
     public static final int DEFAULT_TIMEOUT = 5000;
     public static final int CODE_REQUEST_EXCEPTION = Integer.MAX_VALUE;
-    private static Executor executor = Executors.newCachedThreadPool();
+    private static final Executor executor = Executors.newCachedThreadPool();
     private final Method method;
-    private HashMap<String, String> headers;
-    private HashMap<String, String> params;
+    private final HashMap<String, String> headers;
+    private final HashMap<String, String> params;
     private int readTimeout = DEFAULT_TIMEOUT;
     private int connectTimeout = DEFAULT_TIMEOUT;
     private String url;
@@ -100,31 +140,32 @@ public class HttpX {
         return this;
     }
 
-    public void requestSync(final IResult result) {
-        exec(result);
+    public Cancelable requestAsync(final IResult result) {
+        Cancelable cancelable = new Cancelable(this, result);
+        cancelable.runAsync();
+        return cancelable;
     }
 
-    public void request(final IResult result) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                exec(result);
-            }
-        });
+    public Cancelable request(final IResult result) {
+        Cancelable cancelable = new Cancelable(this, result);
+        cancelable.run();
+        return cancelable;
     }
 
 
-    private void exec(IResult result) {
+    private void exec(IResult result, Cancelable cancelable) {
+        if (cancelable.isCancel())
+            return;
         StringBuilder sbRequest = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             sbRequest.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
         }
         String requestParamsStr = params.size() > 0 ? sbRequest.substring(0, sbRequest.length() - 1) : "";
         try {
-            if (method == Method.GET) {
+            if (method == Method.GET && requestParamsStr.length() > 0) {
                 url = url + "?" + requestParamsStr;
             }
-            System.out.println("url:"+url);
+            System.out.println("url:" + url);
             //由URL的openConnection方法得到一个HttpURLConnection（需要强转）
             HttpURLConnection httpURLConnection =
                     (HttpURLConnection) new URL(url).openConnection();
@@ -134,6 +175,9 @@ public class HttpX {
             httpURLConnection.setConnectTimeout(readTimeout);
             httpURLConnection.setReadTimeout(connectTimeout);
 
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpURLConnection.setRequestProperty(entry.getKey(), entry.getValue());
+            }
             httpURLConnection.setDoInput(true);
             httpURLConnection.setDoOutput(true);
 
@@ -150,17 +194,26 @@ public class HttpX {
             int code = httpURLConnection.getResponseCode();
             if (code == 200) {
                 //由HttpURLConnection拿到输入流
-                InputStream in = httpURLConnection.getInputStream();
-                StringBuffer sb = new StringBuffer();
+                final InputStream in = httpURLConnection.getInputStream();
+                cancelable.cancelTask = httpURLConnection::disconnect;
+                StringBuilder sb = new StringBuilder();
                 //根据输入流做一些IO操作
                 byte[] buff = new byte[4 * 1024];
                 int len;
                 if (result instanceof IBytesResult) {
                     IBytesResult bytesResult = (IBytesResult) result;
                     while ((len = in.read(buff)) != -1) {
+                        if (cancelable.isCancel()) {
+                            cancelable.cancel();
+                            return;
+                        }
                         bytesResult.onResult(buff, 0, len);
                     }
                 } else if (result instanceof IPlainTextResult) {
+                    if (cancelable.isCancel()) {
+                        cancelable.cancel();
+                        return;
+                    }
                     while ((len = in.read(buff)) != -1) {
                         sb.append(new String(buff, 0, len, UTF_8));
                     }
@@ -176,7 +229,8 @@ public class HttpX {
                 result.onError(code, httpURLConnection.getResponseMessage());
             }
         } catch (Exception e) {
-            result.onError(CODE_REQUEST_EXCEPTION, e.getMessage());
+            if (!cancelable.isCancel())
+                result.onError(CODE_REQUEST_EXCEPTION, e.getMessage());
         }
     }
 }
