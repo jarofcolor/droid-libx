@@ -26,6 +26,14 @@ public class ThreadX {
         return new ThreadX(Type.UI);
     }
 
+    public static ThreadX io() {
+        return new ThreadX(Type.IO);
+    }
+
+    public static ThreadX create() {
+        return new ThreadX(Type.NEW);
+    }
+
     public void post(Runnable runnable) {
         if (type == Type.UI) {
             handler.post(runnable);
