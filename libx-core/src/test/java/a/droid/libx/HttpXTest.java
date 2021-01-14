@@ -22,7 +22,7 @@ public class HttpXTest {
 
     @Test
     public void testPost(){
-        HttpX.post("https://www.baidu.com/").param("tn","simple").requestAsync(new HttpX.IPlainTextResult() {
+        HttpX.post("https://www.baidu.com/").param("tn","simple").request(new HttpX.IPlainTextResult() {
             @Override
             public void onResult(String data) {
                 System.out.println("success:" + data);

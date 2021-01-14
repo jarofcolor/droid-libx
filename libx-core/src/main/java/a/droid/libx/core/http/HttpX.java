@@ -146,15 +146,13 @@ public class HttpX {
         return cancelable;
     }
 
-    public Cancelable request(final IResult result) {
-        Cancelable cancelable = new Cancelable(this, result);
-        cancelable.run();
-        return cancelable;
+    public void request(final IResult result) {
+        exec(result, null);
     }
 
 
     private void exec(IResult result, Cancelable cancelable) {
-        if (cancelable.isCancel())
+        if (cancelable != null && cancelable.isCancel())
             return;
         StringBuilder sbRequest = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -195,7 +193,9 @@ public class HttpX {
             if (code == 200) {
                 //由HttpURLConnection拿到输入流
                 final InputStream in = httpURLConnection.getInputStream();
-                cancelable.cancelTask = httpURLConnection::disconnect;
+                if (cancelable != null) {
+                    cancelable.cancelTask = httpURLConnection::disconnect;
+                }
                 StringBuilder sb = new StringBuilder();
                 //根据输入流做一些IO操作
                 byte[] buff = new byte[4 * 1024];
@@ -203,14 +203,14 @@ public class HttpX {
                 if (result instanceof IBytesResult) {
                     IBytesResult bytesResult = (IBytesResult) result;
                     while ((len = in.read(buff)) != -1) {
-                        if (cancelable.isCancel()) {
+                        if (cancelable != null && cancelable.isCancel()) {
                             cancelable.cancel();
                             return;
                         }
                         bytesResult.onResult(buff, 0, len);
                     }
                 } else if (result instanceof IPlainTextResult) {
-                    if (cancelable.isCancel()) {
+                    if (cancelable != null && cancelable.isCancel()) {
                         cancelable.cancel();
                         return;
                     }
@@ -229,7 +229,7 @@ public class HttpX {
                 result.onError(code, httpURLConnection.getResponseMessage());
             }
         } catch (Exception e) {
-            if (!cancelable.isCancel())
+            if (cancelable != null && !cancelable.isCancel())
                 result.onError(CODE_REQUEST_EXCEPTION, e.getMessage());
         }
     }
