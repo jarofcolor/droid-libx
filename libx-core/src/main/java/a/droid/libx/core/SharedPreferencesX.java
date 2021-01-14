@@ -50,6 +50,15 @@ public class SharedPreferencesX {
             return this;
     }
 
+    @SuppressLint("CommitPrefEdits")
+    public SharedPreferencesX clear() {
+        if (editor == null) {
+            editor = preferences.edit();
+        }
+        editor.clear();
+        return this;
+    }
+
     public SharedPreferencesX apply() {
         if (editor != null) {
             editor.apply();

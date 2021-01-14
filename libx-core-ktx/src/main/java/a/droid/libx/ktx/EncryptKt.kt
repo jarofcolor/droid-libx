@@ -92,3 +92,45 @@ fun File.base64(dst: File, isDecoded: Boolean = false, lineLength: Int = 76, lin
     else
         EncryptX.base64().decode(this, dst, lineSeparator.isNotEmpty())
 }
+
+fun Number.aes(key: String, isDecoded: Boolean = false): ByteArray {
+    return if (!isDecoded)
+        EncryptX.aes().encode(this.toString(), key)
+    else
+        EncryptX.aes().decode(this.toString(), key)
+}
+
+fun String.aes(key: String, isDecoded: Boolean = false): ByteArray {
+    return if (!isDecoded)
+        EncryptX.aes().encode(this, key)
+    else
+        EncryptX.aes().decode(this, key)
+}
+
+fun ByteArray.aes(key: String, isDecoded: Boolean = false): ByteArray {
+    return if (!isDecoded)
+        EncryptX.aes().encode(this, key)
+    else
+        EncryptX.aes().decode(this, key)
+}
+
+fun Number.des(key: String, isDecoded: Boolean = false): ByteArray {
+    return if (!isDecoded)
+        EncryptX.des().encode(this.toString(), key)
+    else
+        EncryptX.des().decode(this.toString(), key)
+}
+
+fun String.des(key: String, isDecoded: Boolean = false): ByteArray {
+    return if (!isDecoded)
+        EncryptX.des().encode(this, key)
+    else
+        EncryptX.des().decode(this, key)
+}
+
+fun ByteArray.des(key: String, isDecoded: Boolean = false): ByteArray {
+    return if (!isDecoded)
+        EncryptX.des().encode(this, key)
+    else
+        EncryptX.des().decode(this, key)
+}

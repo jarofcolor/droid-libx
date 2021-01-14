@@ -4,10 +4,15 @@ import a.droid.libx.core.SharedPreferencesX
 import android.content.Context
 import android.content.SharedPreferences
 
-fun SharedPreferences.commit(isApply: Boolean = true, session: (editor: SharedPreferences.Editor) -> Unit) {
-    SharedPreferencesX.on(this).commit(isApply) {
+fun SharedPreferences.apply(
+        session: SharedPreferences.Editor.() -> Unit) {
+    SharedPreferencesX.on(this).commit {
         session(it)
-    }
+    }.apply()
+}
+
+fun SharedPreferences.clear() {
+    SharedPreferencesX.on(this).clear().apply();
 }
 
 fun <T> SharedPreferences.get(key: String): T {

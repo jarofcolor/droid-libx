@@ -11,7 +11,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
-        versionName "0.0.1"
+        versionName POM_VERSION
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -40,7 +40,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
+def libXCore = rootProject.findProject("libx-core")
 ext.mavenDependencies = [
-        [groupId: "a.droid.libx", artifactId: "core", version: "0.0.2", scope: "compile", type: "aar"]
+        [groupId: "a.droid.libx", artifactId: "core", version: "${libXCore.POM_VERSION}", scope: "compile", type: "aar"]
 ]
 apply from: '../gradle/maven-upload.gradle'

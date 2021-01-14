@@ -6,7 +6,8 @@ import java.io.File;
 
 import a.droid.libx.core.encrypt.EncryptX;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class EncryptXUnitTest {
     @Test
@@ -36,14 +37,14 @@ public class EncryptXUnitTest {
         String srcFilePath = getClass().getResource("/test.txt").getFile();
         System.out.println(srcFilePath);
         File src = new File(srcFilePath);
-        File dst = new File(srcFilePath+".base64");
-        boolean isSuccess = EncryptX.base64().encode(src,dst);
+        File dst = new File(srcFilePath + ".base64");
+        boolean isSuccess = EncryptX.base64().encode(src, dst);
         assertTrue(isSuccess);
 
         //file decoded
-        src = new File(srcFilePath+".base64");
-        dst = new File(srcFilePath+".base64.decoded");
-        isSuccess = EncryptX.base64().decode(src,dst);
+        src = new File(srcFilePath + ".base64");
+        dst = new File(srcFilePath + ".base64.decoded");
+        isSuccess = EncryptX.base64().decode(src, dst);
         assertTrue(isSuccess);
     }
 
@@ -63,5 +64,22 @@ public class EncryptXUnitTest {
         assertEquals(encodedStr, "0c37c6a6ead1264c42d8a3800304ca7c8565c337");
     }
 
+    @Test
+    public void aes() {
+        String str = "Ahjdfhuddjkcdufguefhevedfvgerufeocfndkvurfgurevbrf=X";
+        String key = "qwer============";
+
+        byte[] encodedBytes = EncryptX.aes().encode(str, key);
+        assertEquals(new String(EncryptX.aes().decode(encodedBytes, key)), str);
+    }
+
+    @Test
+    public void des() {
+        String str = "Ahjdfhuddjkcdufguefhevedfvgerufeocfndkvurfgurevbrf=X";
+        String key = "qwer============";
+
+        byte[] encodedBytes = EncryptX.des().encode(str, key);
+        assertEquals(new String(EncryptX.des().decode(encodedBytes, key)), str);
+    }
 
 }

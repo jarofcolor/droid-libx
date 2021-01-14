@@ -25,4 +25,12 @@ public class EncryptX {
         return new Base64();
     }
 
+    public static AesDes aes() {
+        return new AesDes(AesDes.KEY_AES);
+    }
+
+    public static AesDes des() {
+        return new AesDes(AesDes.KEY_DES);
+    }
+
 }
