@@ -3,7 +3,6 @@ package a.droid.libx.core;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,11 +14,15 @@ public class ThreadX {
 
     private final Type type;
 
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private final ScheduledExecutorService ioThread = Executors.newSingleThreadScheduledExecutor();
+    private static final Handler handler = new Handler(Looper.getMainLooper());
+    private static final ScheduledExecutorService ioThread = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService newThread;
 
     private ThreadX(Type type) {
         this.type = type;
+        if (type == Type.NEW) {
+            newThread = Executors.newSingleThreadScheduledExecutor();
+        }
     }
 
     public static ThreadX ui() {
@@ -40,7 +43,7 @@ public class ThreadX {
         } else if (type == Type.IO) {
             ioThread.execute(runnable);
         } else if (type == Type.NEW) {
-            new Thread(runnable).start();
+            newThread.execute(runnable);
         }
     }
 
@@ -50,14 +53,7 @@ public class ThreadX {
         } else if (type == Type.IO) {
             ioThread.schedule(runnable, delayMillis, TimeUnit.MILLISECONDS);
         } else if (type == Type.NEW) {
-            new Thread(() -> {
-                try {
-                    Thread.sleep(delayMillis);
-                    runnable.run();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            newThread.schedule(runnable, delayMillis, TimeUnit.MILLISECONDS);
         }
     }
 }
