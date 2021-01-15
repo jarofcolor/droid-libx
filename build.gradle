@@ -1,3 +1,5 @@
+import java.nio.charset.Charset
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
@@ -24,4 +26,17 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+task makeReadme(group: "readme") {
+    def readmeFile = new File(projectDir, "README.md")
+    def readmeText = readmeFile.getText("utf-8")
+    def replaceText = readmeText
+    replaceText = replaceText.replaceAll("'a.droid.libx:core:\\S+'", "'a.droid.libx:core:${findProject("libx-core").POM_VERSION}'")
+    replaceText = replaceText.replaceAll("'a.droid.libx:core-ktx:\\S+'", "'a.droid.libx:core-ktx:${findProject("libx-core-ktx").POM_VERSION}'")
+    if (replaceText != readmeText) {
+        BufferedWriter writer = readmeFile.newWriter("utf-8")
+        writer.write(replaceText)
+        writer.close()
+    }
 }
