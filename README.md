@@ -1,6 +1,6 @@
 # droid-libx
 
-This a extension library for android，it contains several handy tools。
+This a extension library for android,it contains several handy tools.
 
 # How can I use it?
 
