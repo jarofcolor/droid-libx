@@ -1,5 +1,7 @@
 package a.droid.libx.core.http;
 
+import android.text.TextUtils;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -87,6 +89,7 @@ public class HttpX {
     private int readTimeout = DEFAULT_TIMEOUT;
     private int connectTimeout = DEFAULT_TIMEOUT;
     private String url;
+    private String json;
 
     private HttpX(String url, Method method) {
         this.url = url;
@@ -140,6 +143,11 @@ public class HttpX {
         return this;
     }
 
+    public HttpX json(String json) {
+        this.json = json;
+        return this;
+    }
+
     public Cancelable requestAsync(final IResult result) {
         Cancelable cancelable = new Cancelable(this, result);
         cancelable.runAsync();
@@ -176,6 +184,9 @@ public class HttpX {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 httpURLConnection.setRequestProperty(entry.getKey(), entry.getValue());
             }
+            boolean isJson = !TextUtils.isEmpty(json);
+            if (isJson)
+                httpURLConnection.setRequestProperty("Content-Type", "application/json");
             httpURLConnection.setDoInput(true);
             httpURLConnection.setDoOutput(true);
 
@@ -183,7 +194,10 @@ public class HttpX {
             if (method == Method.POST) {
                 //把请求正文通过OutputStream发出去
                 os = httpURLConnection.getOutputStream();
-                os.write(requestParamsStr.getBytes());
+                if (isJson)
+                    os.write(json.getBytes());
+                else
+                    os.write(requestParamsStr.getBytes());
                 os.flush();
             }
 
