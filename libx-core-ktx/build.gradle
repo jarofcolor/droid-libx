@@ -42,6 +42,6 @@ dependencies {
 
 def libXCore = rootProject.findProject("libx-core")
 ext.mavenDependencies = [
-        [groupId: "a.droid.libx", artifactId: "core", version: "${libXCore.POM_VERSION}", scope: "compile", type: "aar"]
+        [groupId: "real.droid", artifactId: "libx-core", version: "${libXCore.POM_VERSION}", scope: "compile", type: "aar"]
 ]
 apply from: '../gradle/maven-upload.gradle'
