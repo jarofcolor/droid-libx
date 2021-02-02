@@ -11,8 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NavigatorX {
-    interface INavigation {
+    public interface INavigation {
         <T> void onResult(T result);
+    }
+
+    public interface ICanPop {
+        boolean canPop();
     }
 
     public static class Pair<F, S> {
@@ -108,16 +112,22 @@ public class NavigatorX {
         }
     }
 
-    public void pop() {
-        this.pop(null);
+    public boolean pop() {
+        return this.pop(null);
     }
 
-    public synchronized <T> void pop(T result) {
+    public synchronized <T> boolean pop(T result) {
         FragmentManager manager = managerRef.get();
         if (manager != null) {
             synchronized (this) {
                 if (array.size() > 1) {
                     Pair<Fragment, INavigation> pair = array.remove(array.size() - 1);
+                    if (pair.first instanceof ICanPop) {
+                        ICanPop canPop = (ICanPop) pair.first;
+                        if (canPop.canPop()) {
+                            return true;
+                        }
+                    }
                     NavigatorX.INavigation navigation = pair.second;
                     if (navigation != null && result != null) {
                         navigation.onResult(result);
@@ -126,13 +136,11 @@ public class NavigatorX {
                             .remove(pair.first)
                             .show(array.get(array.size() - 1).first)
                             .commit();
+                    return true;
                 }
             }
         }
-    }
-
-    public synchronized boolean canPop() {
-        return array.size() > 1;
+        return false;
     }
 
     public synchronized void destroy() {

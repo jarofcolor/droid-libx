@@ -10,7 +10,7 @@ This a extension library for android,it contains several handy tools.
 
 ``` gradle
 dependencies {
-    implementation 'real.droid:libx-core:0.0.5'
+    implementation 'real.droid:libx-core:0.0.6'
 }
 ```
 
@@ -18,7 +18,7 @@ dependencies {
 
 ``` gradle
 dependencies {
-    implementation 'real.droid:libx-core:0.0.5'
+    implementation 'real.droid:libx-core:0.0.6'
     implementation 'real.droid:libx-core-ktx:0.0.5'
 }
 ```
