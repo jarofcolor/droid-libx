@@ -9,7 +9,7 @@ fun system(cmd: String): RuntimeX.Result? {
 
 fun systemAsync(cmd: String, callback: (result: RuntimeX.Result) -> Unit) {
     ThreadX.create().post {
-        var result = RuntimeX.on().runtimeCommand(cmd)
+        val result = RuntimeX.on().runtimeCommand(cmd)
         ThreadX.ui().post {
             callback(result)
         }
