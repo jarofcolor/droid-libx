@@ -1,6 +1,7 @@
 package real.droid.libx.core;
 
 import android.annotation.TargetApi;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -207,6 +208,58 @@ public class BundleX {
 
     public BundleX putStringArray(String key, String[] value) {
         bundle.putStringArray(key, value);
+        return this;
+    }
+
+    public BundleX putAll(Bundle bundle) {
+        bundle.putAll(bundle);
+        return this;
+    }
+
+    public BundleX putObject(String key, Object value) {
+        if (value instanceof Byte) {
+            putByte(key, (Byte) value);
+        } else if (value instanceof Character) {
+            putChar(key, (Character) value);
+        } else if (value instanceof Short) {
+            putShort(key, (Short) value);
+        } else if (value instanceof Float) {
+            putFloat(key, (Float) value);
+        } else if (value instanceof CharSequence) {
+            putCharSequence(key, (CharSequence) value);
+        } else if (value instanceof Parcelable) {
+            putParcelable(key, (Parcelable) value);
+        } else if (value instanceof Parcelable[]) {
+            putParcelableArray(key, (Parcelable[]) value);
+        } else if (value instanceof ArrayList) {
+            putParcelableArrayList(key, (ArrayList) value);
+        } else if (value instanceof SparseArray) {
+            putSparseParcelableArray(key, (SparseArray) value);
+        } else if (value instanceof Serializable) {
+            putSerializable(key, (Serializable) value);
+        } else if (value instanceof byte[]) {
+            putByteArray(key, (byte[]) value);
+        } else if (value instanceof short[]) {
+            putShortArray(key, (short[]) value);
+        } else if (value instanceof char[]) {
+            putCharArray(key, (char[]) value);
+        } else if (value instanceof float[]) {
+            putFloatArray(key, (float[]) value);
+        } else if (value instanceof CharSequence[]) {
+            putCharSequenceArray(key, (CharSequence[]) value);
+        } else if (value instanceof Bundle) {
+            putBundle(key, (Bundle) value);
+        } else if (value instanceof Binder) {
+            putBinder(key, (Binder) value);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (value instanceof Size) {
+                    putSize(key, (Size) value);
+                } else if (value instanceof SizeF) {
+                    putSizeF(key, (SizeF) value);
+                }
+            }
+        }
         return this;
     }
 
