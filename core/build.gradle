@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'com.github.dcendents.android-maven'
 }
 
 android {
@@ -9,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 1
-        versionName POM_VERSION
+        versionCode LIBX_VERSION_CODE
+        versionName LIBX_VERSION
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -33,5 +34,3 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
-
-apply from: '../gradle/maven-upload.gradle'
