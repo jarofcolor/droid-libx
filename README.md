@@ -6,6 +6,14 @@ This a extension library for android,it contains several handy tools.
 
 ## Gradle
 
+增加maven仓库
+``` gradle
+repositories {
+	...
+	maven { url 'https://jitpack.io' }
+}
+```
+
 ### Java
 
 ``` gradle
