@@ -18,7 +18,7 @@ repositories {
 
 ``` gradle
 dependencies {
-    implementation 'com.github.jarofcolor:droid-libx:core:0.0.6'
+    implementation 'com.github.jarofcolor.droid-libx:core:0.0.6'
 }
 ```
 
@@ -26,7 +26,7 @@ dependencies {
 
 ``` gradle
 dependencies {
-    implementation 'com.github.jarofcolor:droid-libx:core:0.0.6'
-    implementation 'com.github.jarofcolor:droid-libx:core-ktx:0.0.6'
+    implementation 'com.github.jarofcolor.droid-libx:core:0.0.6'
+    implementation 'com.github.jarofcolor.droid-libx:core-ktx:0.0.6'
 }
 ```
